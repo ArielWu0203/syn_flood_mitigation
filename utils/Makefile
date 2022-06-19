@@ -1,3 +1,8 @@
+DURATION=20
+ATTACKER=40
+RATE=u200000
+NORMAL=40
+
 BUILD_DIR = build
 PCAP_DIR = pcaps
 LOG_DIR = logs
@@ -32,7 +37,8 @@ endif
 all: run
 
 run: build
-	sudo python3 $(RUN_SCRIPT) -t $(TOPO) $(run_args)
+	sudo python3 $(RUN_SCRIPT) -t $(TOPO) $(run_args) -d $(DURATION) -a $(ATTACKER) -r $(RATE)
+	mergecap -w ./testing/n$(NORMAL)_m$(ATTACKER)_r$(RATE).pcap $(PCAP_DIR)/s1-eth1_in.pcap $(PCAP_DIR)/s1-eth1_out.pcap 
 
 stop:
 	sudo mn -c

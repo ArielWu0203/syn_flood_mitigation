@@ -32,6 +32,9 @@ from mininet.cli import CLI
 from p4runtime_switch import P4RuntimeSwitch
 import p4runtime_lib.simple_controller
 
+import time
+import threading
+
 def configureP4Switch(**switch_args):
     """ Helper class that is called by mininet to initialize
         the virtual P4 switches. The purpose is to ensure each
@@ -150,7 +153,7 @@ class ExerciseRunner:
 
 
     def __init__(self, topo_file, log_dir, pcap_dir,
-                       switch_json, bmv2_exe='simple_switch', quiet=False):
+                       switch_json, bmv2_exe='simple_switch', quiet=False, attacker_num=0, rate=0, duration=0):
         """ Initializes some attributes and reads the topology json. Does not
             actually run the exercise. Use run_exercise() for that.
 
@@ -183,12 +186,20 @@ class ExerciseRunner:
         self.switch_json = switch_json
         self.bmv2_exe = bmv2_exe
 
+        # Custom parameters
+        self.attacker_num=attacker_num
+        self.attack_rate=rate
+        self.duration=duration
 
     def run_exercise(self):
         """ Sets up the mininet instance, programs the switches,
             and starts the mininet CLI. This is the main method to run after
             initializing the object.
         """
+
+        # init start time
+        self.start_time=0
+        
         # Initialize mininet with the topology specified by the config
         self.create_network()
         self.net.start()
@@ -199,9 +210,27 @@ class ExerciseRunner:
         self.program_switches()
 
         # wait for that to finish. Not sure how to do this better
-        sleep(1)
+        sleep(5)
+        
+        self.start_time=time.time()
 
-        self.do_net_cli()
+        # start testing
+        hosts_thread =list()
+        for host_name, host_info in list(self.hosts.items())[1+self.attacker_num:]:
+            host = threading.Thread(target=self.normal_testing, args=(host_name,))
+            host.start()
+            hosts_thread.append(host)
+
+        # start attacking
+        for host_name, host_info in list(self.hosts.items())[1: 1+self.attacker_num]:
+            host = threading.Thread(target=self.attack_testing, args=(host_name,))
+            host.start()
+            hosts_thread.append(host)
+
+        for h in hosts_thread:
+            h.join()
+
+        # self.do_net_cli()
         # stop right after the CLI is exited
         self.net.stop()
 
@@ -303,6 +332,27 @@ class ExerciseRunner:
             if 'runtime_json' in sw_dict:
                 self.program_switch_p4runtime(sw_name, sw_dict)
 
+    def normal_testing(self, host_name):
+        """Normal user execute CURL with 5 (f/s)
+        """
+        h=self.net.get(host_name)
+        while True:
+            if time.time()-self.start_time >=self. duration:
+                print("%s normal_stop" % host_name)
+                return
+            h.cmd("curl 10.0.1.1 &")
+            sleep(0.2)
+
+    def attack_testing(self, host_name):
+        """attack execute CURL with defined rate
+        """
+        h=self.net.get(host_name)
+        h.cmd("hping3 10.0.1.1 -S -i %s -p 80 &" % self.attack_rate)
+        while True:
+            if time.time()-self.start_time >=self. duration:
+                print("%s attack_stop" % host_name)
+                return
+
     def program_hosts(self):
         """ Execute any commands provided in the topology.json file on each Mininet host
         """
@@ -369,6 +419,9 @@ def get_args():
     parser.add_argument('-j', '--switch_json', type=str, required=False)
     parser.add_argument('-b', '--behavioral-exe', help='Path to behavioral executable',
                                 type=str, required=False, default='simple_switch')
+    parser.add_argument('-a', '--attacker_num', help='the number of attackers' , type=int, required=False, default=0)
+    parser.add_argument('-r', '--rate', help='the rate of attackers' , type=str, required=False, default=0)
+    parser.add_argument('-d', '--duration', help='the duration of execution' , type=int, required=False, default=0)
     return parser.parse_args()
 
 
@@ -378,7 +431,7 @@ if __name__ == '__main__':
 
     args = get_args()
     exercise = ExerciseRunner(args.topo, args.log_dir, args.pcap_dir,
-                              args.switch_json, args.behavioral_exe, args.quiet)
+                              args.switch_json, args.behavioral_exe, args.quiet, args.attacker_num, args.rate, args.duration)
 
     exercise.run_exercise()
 
