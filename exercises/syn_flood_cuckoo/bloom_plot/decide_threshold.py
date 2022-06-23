@@ -4,14 +4,14 @@ import numpy as np
 def decide_threshold():
     fig_1 = plt.figure(figsize=(10,5))
     ax_1 = fig_1.add_subplot(1, 1, 1)
-    ax_1.set_xlabel("Threshold")
+    ax_1.set_xlabel("Threshold(1e-4)")
     ax_1.set_ylabel("specificity")
     fig_2 = plt.figure(figsize=(10,5))
     ax_2 = fig_2.add_subplot(1, 1, 1)
-    ax_2.set_xlabel("Threshold")
+    ax_2.set_xlabel("Threshold(1e-4)")
     ax_2.set_ylabel("precision")
     ax_1.xaxis.set_ticks(np.linspace(0.1, 2.0, num=20))       
-    ax_2.xaxis.set_ticks(np.linspace(0.1, 2.0, num=20))       
+    ax_2.xaxis.set_ticks(np.linspace(0.1, 2.0, num=20))
     markers=["o", "^", "s", "*", "+", "D", "."]
     i=0
     for rate in [5, 10, 20, 40, 50, 80, 100]:
