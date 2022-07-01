@@ -30,6 +30,28 @@ def make_s1(n):
                     "dstAddr": "08:00:00:00:01:11",
                     "port": 1
                 }
+            },
+            {
+                "table": "MyIngress.ipv4_lpm",
+                "match": {
+                    "hdr.ipv4.dstAddr": ["10.0.1.2", 32]
+                },
+                "action_name": "MyIngress.ipv4_forward",
+                "action_params": {
+                    "dstAddr": "08:00:00:00:01:22",
+                    "port": 2
+                }
+            },
+            {
+                "table": "MyIngress.ipv4_lpm",
+                "match": {
+                    "hdr.ipv4.dstAddr": ["10.0.1.3", 32]
+                },
+                "action_name": "MyIngress.ipv4_forward",
+                "action_params": {
+                    "dstAddr": "08:00:00:00:01:33",
+                    "port": 3
+                }
             }
         ]
     }
@@ -49,7 +71,7 @@ def make_s1(n):
                 "action_name": "MyIngress.ipv4_forward",
                 "action_params": {
                     "dstAddr": mac,
-                    "port": i
+                    "port": i+2
                 }
             }
             dict["table_entries"].append(object)
@@ -64,13 +86,21 @@ def make_topo(n):
             "h1": {"ip": "10.0.1.1/24", "mac": "08:00:00:00:01:11",
                 "commands":["route add default gw 10.0.1.254 dev eth0",
                         "arp -i eth0 -s 10.0.1.254 08:00:00:00:01:00",
+                        "python3 -m http.server 80 &"]},
+            "h2": {"ip": "10.0.1.2/24", "mac": "08:00:00:00:01:22",
+                "commands":["route add default gw 10.0.1.254 dev eth0",
+                        "arp -i eth0 -s 10.0.1.254 08:00:00:00:01:00",
+                        "python3 -m http.server 80 &"]},
+            "h3": {"ip": "10.0.1.3/24", "mac": "08:00:00:00:01:33",
+                "commands":["route add default gw 10.0.1.254 dev eth0",
+                        "arp -i eth0 -s 10.0.1.254 08:00:00:00:01:00",
                         "python3 -m http.server 80 &"]}
         },
         "switches": {
             "s1": { "runtime_json" : "hosts-topo/s1-runtime.json" }
         },
         "links": [
-            ["h1", "s1-p1"]
+            ["h1", "s1-p1"], ["h2", "s1-p2"], ["h3", "s1-p3"]
         ]
     }
 
@@ -80,14 +110,14 @@ def make_topo(n):
             mac = f.readline().strip()
             if(mac == ''):
                 break
-            dict["hosts"]["h"+str(i)] = {
+            dict["hosts"]["h"+str(i+2)] = {
                 "ip": "10.0.2.%d/24" % i, "mac": mac,
                 "commands":[
                     "route add default gw 10.0.2.254 dev eth0",
                     "arp -i eth0 -s 10.0.2.254 08:00:00:00:01:00"
                 ]
             }
-            dict["links"].append(["h%d"%i, "s1-p%d"%i])
+            dict["links"].append(["h%d"%(i+2), "s1-p%d"%(i+2)])
             i+=1
 
     with open("./hosts-topo/topology.json", "w") as outfile:

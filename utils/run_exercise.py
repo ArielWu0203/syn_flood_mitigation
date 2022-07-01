@@ -34,6 +34,9 @@ import p4runtime_lib.simple_controller
 
 import time
 import threading
+import random
+
+server_ip = ['10.0.1.1', '10.0.1.2', '10.0.1.3']
 
 def configureP4Switch(**switch_args):
     """ Helper class that is called by mininet to initialize
@@ -216,13 +219,13 @@ class ExerciseRunner:
 
         # start testing
         hosts_thread =list()
-        for host_name, host_info in list(self.hosts.items())[1+self.attacker_num:]:
+        for host_name, host_info in list(self.hosts.items())[3+self.attacker_num:]:
             host = threading.Thread(target=self.normal_testing, args=(host_name,))
             host.start()
             hosts_thread.append(host)
 
         # start attacking
-        for host_name, host_info in list(self.hosts.items())[1: 1+self.attacker_num]:
+        for host_name, host_info in list(self.hosts.items())[3: 3+self.attacker_num]:
             host = threading.Thread(target=self.attack_testing, args=(host_name,))
             host.start()
             hosts_thread.append(host)
@@ -336,18 +339,20 @@ class ExerciseRunner:
         """Normal user execute CURL with 5 (f/s)
         """
         h=self.net.get(host_name)
+        index  = random.randint(0, 2)
         while True:
             if time.time()-self.start_time >=self. duration:
                 print("%s normal_stop" % host_name)
                 return
-            h.cmd("curl 10.0.1.1 &")
-            sleep(0.2)
+            h.cmd("curl %s &" % server_ip[index])
+            sleep(4)
 
     def attack_testing(self, host_name):
         """attack execute CURL with defined rate
         """
         h=self.net.get(host_name)
-        h.cmd("hping3 10.0.1.1 -S -i %s -p 80 &" % self.attack_rate)
+        index  = random.randint(0, 2)
+        h.cmd("hping3 %s -S -i %s -p 80 &" % ( server_ip[index], self.attack_rate))
         while True:
             if time.time()-self.start_time >=self. duration:
                 print("%s attack_stop" % host_name)

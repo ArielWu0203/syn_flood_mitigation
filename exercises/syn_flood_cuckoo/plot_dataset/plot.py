@@ -17,16 +17,19 @@ def plot_secerio_2():
     ax_1 = fig_1.add_subplot(1, 1, 1)
     ax_1.set_xlabel("# of attackers")
     ax_1.set_ylabel("specificity")
+    ax_1.set_ylim(0.0 ,1.1)
     fig_2 = plt.figure(figsize=(10,5))
     ax_2 = fig_2.add_subplot(1, 1, 1)
     ax_2.set_xlabel("# of attackers")
     ax_2.set_ylabel("prcision")
+    ax_2.set_ylim(0.0 ,1.1)
     fig_3 = plt.figure(figsize=(10,5))
     ax_3 = fig_3.add_subplot(1, 1, 1)
     ax_3.set_xlabel("# of attackers")
     ax_3.set_ylabel("accuracy")
-    input_bloom=open("./bloom/n%d_ru%d_s2.txt"%(40, 10000), 'r')
-    input_cuckoo=open("./cuckoo2/n%d_ru%d_s2.txt"%(40, 10000), 'r')
+    ax_3.set_ylim(0.0 ,1.1)
+    input_bloom=open("./bloom/n%d_ru%d_s2.txt"%(20, 200000), 'r')
+    input_cuckoo=open("./cuckoo2/n%d_ru%d_s2.txt"%(20, 200000), 'r')
     x=[]
     specificity_y=[]
     precision_y=[]
@@ -53,7 +56,7 @@ def plot_secerio_2():
     ax_1.plot(x, specificity_y, marker='^')
     ax_2.plot(x, precision_y, marker='^')
     ax_3.plot(x, accuracy_y, marker='^')
-    legend=["bloom","method"]
+    legend=["bloom","our method"]
     ax_1.legend(legend)
     ax_2.legend(legend)
     ax_3.legend(legend)
@@ -66,16 +69,19 @@ def plot_secerio_3():
     ax_1 = fig_1.add_subplot(1, 1, 1)
     ax_1.set_xlabel("# of attackers")
     ax_1.set_ylabel("specificity")
+    ax_1.set_ylim(0.0 ,1.1)
     fig_2 = plt.figure(figsize=(10,5))
     ax_2 = fig_2.add_subplot(1, 1, 1)
     ax_2.set_xlabel("# of attackers")
     ax_2.set_ylabel("prcision")
+    ax_2.set_ylim(0.0 ,1.1)
     fig_3 = plt.figure(figsize=(10,5))
     ax_3 = fig_3.add_subplot(1, 1, 1)
     ax_3.set_xlabel("# of attackers")
     ax_3.set_ylabel("accuracy")
-    input_bloom=open("./bloom/n%d_ru%d_s3.txt"%(40, 200000), 'r')
-    input_cuckoo=open("./cuckoo2/n%d_ru%d_s3.txt"%(40, 200000), 'r')
+    ax_3.set_ylim(0.0 ,1.1)
+    input_bloom=open("./bloom/n%d_r%d_s3.txt"%(20, 4), 'r')
+    input_cuckoo=open("./cuckoo2/n%d_r%d_s3.txt"%(20, 4), 'r')
     x=[]
     specificity_y=[]
     precision_y=[]
@@ -102,7 +108,7 @@ def plot_secerio_3():
     ax_1.plot(x, specificity_y, marker='^')
     ax_2.plot(x, precision_y, marker='^')
     ax_3.plot(x, accuracy_y, marker='^')
-    legend=["bloom","method"]
+    legend=["bloom","our method"]
     ax_1.legend(legend)
     ax_2.legend(legend)
     ax_3.legend(legend)

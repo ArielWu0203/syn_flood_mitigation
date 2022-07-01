@@ -17,10 +17,10 @@ def decide_threshold():
     ax_1.xaxis.set_ticks(np.linspace(0.1, 2.0, num=20))       
     ax_2.xaxis.set_ticks(np.linspace(0.1, 2.0, num=20))
     ax_3.xaxis.set_ticks(np.linspace(0.1, 2.0, num=20))
-    markers=["o", "^", "s", "*", "+", "D", "."]
+    markers=["o", "^", "s", "*", "+", "d"]
     i=0
-    for rate in [5, 10, 20, 40, 50, 80, 100]:
-        f=open("n40_m40_ru%d.txt"%(1000000/rate), 'r')
+    for rate in [ '4', '1', 'u200000', 'u100000', 'u66667', 'u50000']:
+        f=open("n20_m20_r%s.txt"%(rate), 'r')
         x=[]
         specificity_y=[]
         precision_y=[]
@@ -35,15 +35,15 @@ def decide_threshold():
         ax_2.plot(x, precision_y, marker=markers[i])
         ax_3.plot(x, accuracy_y, marker=markers[i])
         i+=1
-    legend=["5(f/s)","10(f/s)", "20(f/s)", "40(f/s)", "50(f/s)", "80(f/s)", "100(f/s)" ]
+    legend=["0.25(f/s)", "1(f/s)","5(f/s)", "10(f/s)", "15(f/s)", "20(f/s)"]
     box = ax_1.get_position()
     ax_1.set_position([box.x0, box.y0, box.width * 0.8, box.height])
     ax_1.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
     ax_2.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
     ax_3.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
-    fig_1.savefig("bloom_threshold_specificity_n40_m40.png")
-    fig_2.savefig("bloom_threshold_precision_n40_m40.png")
-    fig_3.savefig("bloom_threshold_accuracy_n40_m40.png")
+    fig_1.savefig("bloom_threshold_specificity_n20_m20.png")
+    fig_2.savefig("bloom_threshold_precision_n20_m20.png")
+    fig_3.savefig("bloom_threshold_accuracy_n20_m20.png")
 
 
 if __name__ == '__main__':
