@@ -1,7 +1,8 @@
 NORMAL=20
-ATTACKER=80
+ATTACKER=60
 RATE=4
-DURATION=60
+TEST_DIR=./testing/sc5/data_1
+DURATION=180
 
 BUILD_DIR = build
 PCAP_DIR = pcaps
@@ -38,7 +39,8 @@ all: run
 
 run: build
 	sudo python3 $(RUN_SCRIPT) -t $(TOPO) $(run_args) -d $(DURATION) -a $(ATTACKER) -r $(RATE)
-	mergecap -w ./testing/n$(NORMAL)_m$(ATTACKER)_r$(RATE).pcap $(PCAP_DIR)/s1-eth1_in.pcap $(PCAP_DIR)/s1-eth1_out.pcap $(PCAP_DIR)/s1-eth2_in.pcap $(PCAP_DIR)/s1-eth2_out.pcap $(PCAP_DIR)/s1-eth3_in.pcap $(PCAP_DIR)/s1-eth3_out.pcap
+	mkdir -p $(TEST_DIR)
+	mergecap -w $(TEST_DIR)/n$(NORMAL)_m$(ATTACKER)_r$(RATE).pcap $(PCAP_DIR)/s1-eth1_in.pcap $(PCAP_DIR)/s1-eth1_out.pcap $(PCAP_DIR)/s1-eth2_in.pcap $(PCAP_DIR)/s1-eth2_out.pcap $(PCAP_DIR)/s1-eth3_in.pcap $(PCAP_DIR)/s1-eth3_out.pcap
 
 stop:
 	sudo mn -c
