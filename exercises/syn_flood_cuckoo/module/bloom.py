@@ -4,7 +4,7 @@ from module.hash_function import *
 MAX=65535
 misjudged_normal_ip=set()
 
-def bloom_method(n, m, r, e, file_name, T):
+def bloom_method(n, m, r, e, file_name, T, use_decreasing):
     f=open(file_name, 'r')
     all_lines=f.readlines()
     malicious_ip = set()
@@ -30,6 +30,8 @@ def bloom_method(n, m, r, e, file_name, T):
 
     for line in all_lines:
         (timestamp, flag, src_ip, dst_ip) = [t(s) for t,s in zip((float,str, str, str),line.split())]
+        if(timestamp>120):
+            break
         if(dst_ip in server_ip):
             """Hash index and increment the counter
             """
@@ -69,68 +71,77 @@ def bloom_method(n, m, r, e, file_name, T):
                     other_min_index=x
             if(other_min>=10 and syn_min/other_min>T):
                 suspect_ip.add(src_ip)
-                """Checking
-                """
-                # check_normal_ip(src_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e)
-            # Decrease the number
-            counter+=1
-            if(counter>=counter_max):
-                counter=0
-                for i in range(0, e):
-                    if(syn_bloom[i]>0):
-                        syn_bloom[i]-=1
-                    if(other_bloom[i]>0):
-                        other_bloom[i]-=1
+            if(use_decreasing is True):
+                counter+=1
+                if(counter>=counter_max):
+                    counter=0
+                    for i in range(0, e):
+                        if(syn_bloom[i]>0):
+                            syn_bloom[i]-=1
+                        if(other_bloom[i]>0):
+                            other_bloom[i]-=1
     specificity = (n-len(normal_ip&suspect_ip))/n
     precision = len(malicious_ip&suspect_ip)/m
     accuracy=((n-len(normal_ip&suspect_ip))+len(malicious_ip&suspect_ip))/(n+m)
-    # print("有重疊到的index")
-    # for i in range(0, e):
-    #     if(len(index_map_ip[i])>1):
-    #         print("index: %d syn_count: %d other_count: %d" % (i, syn_bloom[i], other_bloom[i]))
-    #         print("normal ip count: %d" % len(index_map_ip[i] & normal_ip))
-    #         print("malicious ip count: %d" % len(index_map_ip[i] & malicious_ip))
-    # check_all(suspect_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e, T)
-    # print("沒有被判斷到的攻擊者ip -- 數量: %d" % len(malicious_ip-suspect_ip))
-    # print(malicious_ip-suspect_ip)
-    return (specificity, precision, accuracy)
+    test_1=check_all_normal_ip(suspect_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e, T)
+    test_3=True
+    if(use_decreasing is False):
+        test_3=check_all_malicious_ip(suspect_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e, T)
+    return (specificity, precision, accuracy, test_1, test_3)
 
-def check_normal_ip(ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e):
-    if(ip not in normal_ip or ip in misjudged_normal_ip):
-        return
-    else: # 誤判正常者
-        misjudged_normal_ip.add(ip)
-        print("誤判的正常者 %s" % ip)
+def check_all_normal_ip(suspect_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e, T):
+    misjudged_normal_ip = normal_ip & suspect_ip
+    four_index_overlapping=set()
+
+    for ip in misjudged_normal_ip:
         syn_min=MAX
         other_min=MAX
         own = set()
         own.add(ip)
+        overlapping_index_count = 0
+        # print("ip: %s" % ip)
         for i in range(0, e):
             if(ip in index_map_ip[i]):
-                print("index: %d syn_count=%d other_count=%d" %(i, syn_bloom[i], other_bloom[i]))
+                if(syn_min>syn_bloom[i]):
+                    syn_min=syn_bloom[i]
+                if(other_min>other_bloom[i]):
+                    other_min=other_bloom[i]
                 same_index_ip = index_map_ip[i] - own
-                print("malicious ip count: %d" % len(same_index_ip&malicious_ip))
-                print("normal ip count: %d" % len(same_index_ip&normal_ip))
-        print("----------\n")
-
-def check_all(suspect_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e, T):
-    # 看沒有被誤判的正常者的 hash 狀況
-    correctjudged_normal_ip=normal_ip-suspect_ip
-    for ip in correctjudged_normal_ip:
-        print("沒有被誤判的正常者 %s" % ip)
+                if(len(same_index_ip & malicious_ip)>0):
+                    overlapping_index_count+=1
+        #         print("index: %d syn_count: %d other_count: %d" % (i, syn_bloom[i], other_bloom[i]))
+        #         print( same_index_ip)
+        # print("syn count: %d other_count:%d" % (syn_min, other_min))
+        # print("---------\n")
+        if(overlapping_index_count==4):
+            four_index_overlapping.add(ip)
+    if(misjudged_normal_ip == four_index_overlapping):
+        return True
+    return False
+        
+def check_all_malicious_ip(suspect_ip, normal_ip, malicious_ip, index_map_ip, syn_bloom, other_bloom, e, T):
+    # print("沒有被抓到的 attacker 數量")
+    # print(len(malicious_ip-suspect_ip))
+    for uncatched_attacker_ip in malicious_ip-suspect_ip:
+        # print("ip: %s" %uncatched_attacker_ip)
+        own=set()
+        own.add(uncatched_attacker_ip)
         syn_min=MAX
         other_min=MAX
-        own = set()
-        own.add(ip)
-        for i in range(0, e):
-            if(ip in index_map_ip[i]):
-                print("index: %d syn_count=%d other_count=%d" %(i, syn_bloom[i], other_bloom[i]))
-                same_index_ip = index_map_ip[i] - own
-                print("malicious ip count: %d" % len(same_index_ip&malicious_ip))
-                print("normal ip count: %d" % len(same_index_ip&normal_ip))
-        print("----------\n")
-    # 少判斷到攻擊者
-    # loss_malicious_ip = malicious_ip - suspect_ip
-    # for ip in loss_malicious_ip:
-
+        overlapping_index_count = 0
+        for index, ip_set in index_map_ip.items():
+            if(uncatched_attacker_ip in ip_set):
+                if(syn_min>syn_bloom[index]):
+                    syn_min=syn_bloom[index]
+                if(other_min>other_bloom[index]):
+                    other_min=other_bloom[index]
+                # print("index: %d 重疊的 ip 有" % index)
+                # print(ip_set-own)
+                if(len(ip_set-own)>0):
+                    overlapping_index_count+=1
+        if(overlapping_index_count<4):
+            return False
+        # print("syn count: %d other count: %d" % (syn_min, other_min))
+        # print("---------\n")
+    return True
         

@@ -1,4 +1,4 @@
-DURATION=180
+DURATION=120
 
 BUILD_DIR = build
 PCAP_DIR = pcaps

@@ -28,16 +28,12 @@ def call_method( sc, n, m, r, e, s, d):
         scenario_1(n, m, r, e)
     elif(sc == 2):
         scenario_2(n, e, s, d)
-    elif(sc == 3):
-        scenario_3(n, e, s, d)
-    elif(sc == 31): # test for none decreasing entry
-        scenario_3_1(n, e, s, d)
-    elif(sc == 4):
-        scenario_4(n, e, s, d)
-    elif(sc == 41): # test for none decreasing entry
-        scenario_4_1(n, e, s, d)
     elif(sc==5):
         scenario_5(n, e, s, d)
+    elif(sc == 51): # test for none decreasing entry
+        scenario_5_1(n, e, s, d)
+    elif(sc==6):
+        scenario_6(m, e, s, d)
     elif(sc==100):
         test_bloom(n, m, r, e, d)
     elif(sc==200):
@@ -95,129 +91,6 @@ def scenario_2(n, e, s, d):
         if(test_2 is False):
             print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
 
-
-"""Input format
-1. n : # of users
-2. e : # of entries for bloom
-3. s : # of slots for cuckoo
-4. d: output data directory
-"""
-def scenario_3(n, e, s, d):
-    rate = "4"
-    output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s3.txt"%(d, n, rate), 'w')
-    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s3.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
-        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
-        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
-        if not os.path.isfile(analysis_file):
-            read_pcap(n, attacker_num, rate, d)
-        (specificity, precision, accuracy, test_2) = cuckoo2_method(n, attacker_num, rate, s, analysis_file, MAC_file)
-        output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
-        output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_1 is False):
-            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        if(test_2 is False):
-            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        if(test_3 is False):
-            print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-
-"""Input format
-1. n : # of users
-2. e : # of entries for bloom
-3. s : # of slots for cuckoo
-4. d: output data directory
-"""
-def scenario_3_1(n, e, s, d):
-    rate = "4"
-    output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s3_1.txt"%(d, n, rate), 'w')
-    output_file_bloom_none_T=open("./plot_dataset/bloom/%s/n%d_r%s_s3_1_none_T.txt"%(d, n, rate), 'w')
-    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s3_1.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
-        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
-        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
-        if not os.path.isfile(analysis_file):
-            read_pcap(n, attacker_num, rate, d)
-
-        (specificity, precision, accuracy, test_2) = cuckoo2_method(n, attacker_num, rate, s, analysis_file, MAC_file)
-        output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_2 is False):
-            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
-        output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_1 is False):
-            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        if(test_3 is False):
-            print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-            
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, False)
-        output_file_bloom_none_T.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_1 is False):
-            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        if(test_3 is False):
-            print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        
-
-"""Input format
-1. n : # of users
-2. e : # of entries for bloom
-3. s : # of slots for cuckoo
-4. d: output data directory
-"""
-def scenario_4(n, e, s, d):
-    rate = "1"
-    output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s4.txt"%(d, n, rate), 'w')
-    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s4.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
-        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
-        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
-        if not os.path.isfile(analysis_file):
-            read_pcap(n, attacker_num, rate, d)
-        (specificity, precision, accuracy, test_2) = cuckoo2_method(n, attacker_num, rate, s, analysis_file, MAC_file)
-        output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_2 is False):
-            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
-        output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_1 is False):
-            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-
-"""Input format
-1. n : # of users
-2. e : # of entries for bloom
-3. s : # of slots for cuckoo
-4. d: output data directory
-"""
-def scenario_4_1(n, e, s, d):
-    rate = "1"
-    output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s4_1.txt"%(d, n, rate), 'w')
-    output_file_bloom_none_T=open("./plot_dataset/bloom/%s/n%d_r%s_s4_1_none_T.txt"%(d, n, rate), 'w')
-    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s4_1.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
-        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
-        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
-        if not os.path.isfile(analysis_file):
-            read_pcap(n, attacker_num, rate, d)
-
-        (specificity, precision, accuracy, test_2) = cuckoo2_method(n, attacker_num, rate, s, analysis_file, MAC_file)
-        output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_2 is False):
-            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
-        output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_1 is False):
-            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-            
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, False)
-        output_file_bloom_none_T.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        if(test_1 is False):
-            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        if(test_3 is False):
-            print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-
-
 """Input format
 1. n : # of users
 2. e : # of entries for bloom
@@ -225,10 +98,10 @@ def scenario_4_1(n, e, s, d):
 4. d: output data directory
 """
 def scenario_5(n, e, s, d):
-    rate = "1"
+    rate = "4"
     output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s5.txt"%(d, n, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s5.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(80, 81, 10):
+    for attacker_num in  range(20, 81, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
         if not os.path.isfile(analysis_file):
@@ -241,6 +114,64 @@ def scenario_5(n, e, s, d):
         output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
+
+"""Input format
+1. n : # of users
+2. e : # of entries for bloom
+3. s : # of slots for cuckoo
+4. d: output data directory
+"""
+def scenario_5_1(n, e, s, d):
+    rate = "4"
+    output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s5_1.txt"%(d, n, rate), 'w')
+    output_file_bloom_none_T=open("./plot_dataset/bloom/%s/n%d_r%s_s5_1_none_T.txt"%(d, n, rate), 'w')
+    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s5_1.txt"%(d, n, rate), 'w')
+    for attacker_num in  range(20, 81, 10):
+        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
+        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
+        if not os.path.isfile(analysis_file):
+            read_pcap(n, attacker_num, rate, d)
+
+        (specificity, precision, accuracy, test_2) = cuckoo2_method(n, attacker_num, rate, s, analysis_file, MAC_file)
+        output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
+        if(test_2 is False):
+            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
+
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
+        output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
+        if(test_1 is False):
+            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
+            
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, False)
+        output_file_bloom_none_T.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
+        if(test_1 is False):
+            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
+        if(test_3 is False):
+            print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
+
+"""Input format
+1. n : # of users
+2. e : # of entries for bloom
+3. s : # of slots for cuckoo
+4. d: output data directory
+"""
+def scenario_6(m, e, s, d):
+    rate = "u200000"
+    output_file_bloom=open("./plot_dataset/bloom/%s/m%d_r%s_s6.txt"%(d, m, rate), 'w')
+    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/m%d_r%s_s6.txt"%(d, m, rate), 'w')
+    for nomral_num in  range(20, 81, 10):
+        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, nomral_num, m, rate)
+        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, nomral_num+m)
+        if not os.path.isfile(analysis_file):
+            read_pcap(nomral_num, m, rate, d)
+        (specificity, precision, accuracy, test_2) = cuckoo2_method(nomral_num, m, rate, s, analysis_file, MAC_file)
+        output_file_cuckoo_2.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
+        if(test_2 is False):
+            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, m, nomral_num, rate))
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(nomral_num, m, rate, e, analysis_file, threshold, True)
+        output_file_bloom.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
+        if(test_1 is False):
+            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, nomral_num, m, rate))
 
 if __name__ == '__main__':
     call_method()

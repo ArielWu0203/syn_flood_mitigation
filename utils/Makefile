@@ -1,8 +1,8 @@
 NORMAL=20
-ATTACKER=60
+ATTACKER=20
 RATE=4
-TEST_DIR=./testing/sc5/data_1
-DURATION=180
+TEST_DIR=./testing/sc6/data_1
+DURATION=120
 
 BUILD_DIR = build
 PCAP_DIR = pcaps
