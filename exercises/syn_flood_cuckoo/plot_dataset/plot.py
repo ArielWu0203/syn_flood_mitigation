@@ -19,6 +19,9 @@ def plot(sc, n, m, r, d):
     elif(sc==6):
         plot_secerio_for_normal(m, r, d, 'sc6')
         plot_all_for_normal(m, r, 'sc6')
+    elif(sc==7):
+        plot_secerio_for_normal(m, r, d, 'sc7')
+        plot_all_for_normal(m, r, 'sc7')
 
 def plot_all_for_normal(m, r, sc):
     fig_1 = plt.figure(figsize=(10,5))
@@ -43,10 +46,10 @@ def plot_all_for_normal(m, r, sc):
         all_file_names= ["./bloom/%s/data_%d/m%d_r%s_s6.txt", "./cuckoo2/%s/data_%d/m%d_r%s_s6.txt"]
         markers=["o", "+"]
         legend=["bloom", "our method"]
-    # if(sc=="sc5"):
-    #     all_file_names= ["./bloom/%s/data_%d/n%d_r%s_s5.txt", "./bloom/%s/data_%d/n%d_r%s_s5_1_none_T.txt", "./cuckoo2/%s/data_%d/n%d_r%s_s5.txt"]
-    #     markers=["o", "^", "+"]
-    #     legend=["bloom","bloom without decreasing", "our method"]
+    if(sc=="sc7"):
+        all_file_names= ["./bloom/%s/data_%d/m%d_r%s_s7.txt", "./bloom/%s/data_%d/m%d_r%s_s7_1_none_T.txt", "./cuckoo2/%s/data_%d/m%d_r%s_s7.txt"]
+        markers=["o", "^", "+"]
+        legend=["bloom","bloom without decreasing", "our method"]
     for file_name, marker in zip(all_file_names, markers):
         x=[20, 30, 40, 50 ,60 , 70, 80]
         specificity_y=[0.0]*7
@@ -92,9 +95,9 @@ def plot_secerio_for_normal(m, r, d, sc):
     if(sc=="sc6"):
         input_bloom_name="./bloom/%s/m%d_r%s_s6.txt"
         input_cuckoo_name="./cuckoo2/%s/m%d_r%s_s6.txt"
-    # elif(sc=="sc5"):
-    #     input_bloom_name="./bloom/%s/n%d_r%s_s5.txt"
-    #     input_cuckoo_name="./cuckoo2/%s/n%d_r%s_s5.txt"
+    elif(sc=="sc7"):
+        input_bloom_name="./bloom/%s/m%d_r%s_s7.txt"
+        input_cuckoo_name="./cuckoo2/%s/m%d_r%s_s7.txt"
     input_bloom=open(input_bloom_name %(d, m, r), 'r')
     input_cuckoo=open(input_cuckoo_name %(d, m, r), 'r')
     x=[]

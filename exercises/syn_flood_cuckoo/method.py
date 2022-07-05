@@ -34,6 +34,10 @@ def call_method( sc, n, m, r, e, s, d):
         scenario_5_1(n, e, s, d)
     elif(sc==6):
         scenario_6(m, e, s, d)
+    elif(sc==7):
+        scenario_7(m, e, s, d)
+    elif(sc==71):
+        scenario_7_1(m, e, s, d)
     elif(sc==100):
         test_bloom(n, m, r, e, d)
     elif(sc==200):
@@ -150,7 +154,7 @@ def scenario_5_1(n, e, s, d):
             print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
 
 """Input format
-1. n : # of users
+1. m: # of attackers
 2. e : # of entries for bloom
 3. s : # of slots for cuckoo
 4. d: output data directory
@@ -172,6 +176,65 @@ def scenario_6(m, e, s, d):
         output_file_bloom.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, nomral_num, m, rate))
+
+"""Input format
+1. m: # of attackers
+2. e : # of entries for bloom
+3. s : # of slots for cuckoo
+4. d: output data directory
+"""
+def scenario_7(m, e, s, d):
+    rate = "4"
+    output_file_bloom=open("./plot_dataset/bloom/%s/m%d_r%s_s7.txt"%(d, m, rate), 'w')
+    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/m%d_r%s_s7.txt"%(d, m, rate), 'w')
+    for nomral_num in  range(20, 81, 10):
+        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, nomral_num, m, rate)
+        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, nomral_num+m)
+        if not os.path.isfile(analysis_file):
+            read_pcap(nomral_num, m, rate, d)
+        (specificity, precision, accuracy, test_2) = cuckoo2_method(nomral_num, m, rate, s, analysis_file, MAC_file)
+        output_file_cuckoo_2.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
+        if(test_2 is False):
+            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, m, nomral_num, rate))
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(nomral_num, m, rate, e, analysis_file, threshold, True)
+        output_file_bloom.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
+        if(test_1 is False):
+            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, nomral_num, m, rate))
+
+
+"""Input format
+1. m : # of attackers
+2. e : # of entries for bloom
+3. s : # of slots for cuckoo
+4. d: output data directory
+"""
+def scenario_7_1(m, e, s, d):
+    rate = "4"
+    output_file_bloom=open("./plot_dataset/bloom/%s/m%d_r%s_s7_1.txt"%(d, m, rate), 'w')
+    output_file_bloom_none_T=open("./plot_dataset/bloom/%s/m%d_r%s_s7_1_none_T.txt"%(d, m, rate), 'w')
+    output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/m%d_r%s_s7_1.txt"%(d, m, rate), 'w')
+    for normal_num in  range(20, 81, 10):
+        analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, normal_num, m, rate)
+        MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, normal_num+m)
+        if not os.path.isfile(analysis_file):
+            read_pcap(normal_num, m, rate, d)
+
+        (specificity, precision, accuracy, test_2) = cuckoo2_method(normal_num, m, rate, s, analysis_file, MAC_file)
+        output_file_cuckoo_2.write("%d %f %f %f\n"% (normal_num, specificity, precision, accuracy))
+        if(test_2 is False):
+            print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
+
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(normal_num, m, rate, e, analysis_file, threshold, True)
+        output_file_bloom.write("%d %f %f %f\n"% (normal_num, specificity, precision, accuracy))
+        if(test_1 is False):
+            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
+            
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(normal_num, m, rate, e, analysis_file, threshold, False)
+        output_file_bloom_none_T.write("%d %f %f %f\n"% (normal_num, specificity, precision, accuracy))
+        if(test_1 is False):
+            print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
+        if(test_3 is False):
+            print('test _3 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
 
 if __name__ == '__main__':
     call_method()

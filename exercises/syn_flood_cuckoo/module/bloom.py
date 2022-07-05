@@ -137,7 +137,7 @@ def check_all_malicious_ip(suspect_ip, normal_ip, malicious_ip, index_map_ip, sy
                     other_min=other_bloom[index]
                 # print("index: %d 重疊的 ip 有" % index)
                 # print(ip_set-own)
-                if(len(ip_set-own)>0):
+                if(len((ip_set-own) & normal_ip)>0):
                     overlapping_index_count+=1
         if(overlapping_index_count<4):
             return False
