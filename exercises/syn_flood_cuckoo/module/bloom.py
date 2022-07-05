@@ -4,7 +4,15 @@ from module.hash_function import *
 MAX=65535
 misjudged_normal_ip=set()
 
-def bloom_method(n, m, r, e, file_name, T, use_decreasing):
+def bloom_method(n, m, r, e, file_name, MAC_file, T, use_decreasing):
+
+    """Make a map bwtween ip and MAC
+    """
+    ip_map_MAC=dict()
+    MAC_file=open(MAC_file, 'r')
+    for i in range(2, 2+m+n):
+        ip_map_MAC["10.0.2.%d"%i]=MAC_file.readline().strip()
+
     f=open(file_name, 'r')
     all_lines=f.readlines()
     malicious_ip = set()
@@ -36,10 +44,10 @@ def bloom_method(n, m, r, e, file_name, T, use_decreasing):
             """Hash index and increment the counter
             """
             h=[0]*4
-            h[0]=hash_ip(src_ip, dst_ip)%e
-            h[1]=(hash_ip(src_ip, dst_ip)+17)%e
-            h[2]=(hash_ip(src_ip, dst_ip)+19)%e
-            h[3]=(hash_ip(src_ip, dst_ip)+23)%e
+            h[0]=hash_ip_mac(dst_ip, ip_map_MAC[src_ip])%e
+            h[1]=(hash_ip_mac(dst_ip, ip_map_MAC[src_ip])+17)%e
+            h[2]=(hash_ip_mac(dst_ip, ip_map_MAC[src_ip])+19)%e
+            h[3]=(hash_ip_mac(dst_ip, ip_map_MAC[src_ip])+23)%e
             if(flag=="S"):
                 for x in h:
                     syn_bloom[x]+=1

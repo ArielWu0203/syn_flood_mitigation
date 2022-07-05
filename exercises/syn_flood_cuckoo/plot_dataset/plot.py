@@ -283,7 +283,7 @@ def plot_all_for_attacker(n, r, sc):
         all_file_names= ["./bloom/%s/data_%d/n%d_r%s_s2.txt", "./cuckoo2/%s/data_%d/n%d_r%s_s2.txt"]
         markers=["o", "+"]
         legend=["bloom", "our method"]
-    if(sc=="sc5"):
+    elif(sc=="sc5"):
         all_file_names= ["./bloom/%s/data_%d/n%d_r%s_s5.txt", "./bloom/%s/data_%d/n%d_r%s_s5_1_none_T.txt", "./cuckoo2/%s/data_%d/n%d_r%s_s5.txt"]
         markers=["o", "^", "+"]
         legend=["bloom","bloom without decreasing", "our method"]
@@ -301,9 +301,12 @@ def plot_all_for_attacker(n, r, sc):
                 precision_y[line_num]+=precision
                 accuracy_y[line_num]+=accuracy
                 line_num+=1
-        ax_1.plot(x, [y/10 for y in specificity_y], marker=marker)
-        ax_2.plot(x, [y/10 for y in precision_y], marker=marker)
-        ax_3.plot(x, [y/10 for y in accuracy_y], marker=marker)
+        specificity_y = [y/10 for y in specificity_y]
+        precision_y =  [y/10 for y in precision_y]
+        accuracy_y = [y/10 for y in accuracy_y]
+        ax_1.plot(x, specificity_y, marker=marker)
+        ax_2.plot(x, precision_y, marker=marker)
+        ax_3.plot(x, accuracy_y, marker=marker)
     ax_1.legend(legend)
     ax_2.legend(legend)
     ax_3.legend(legend)

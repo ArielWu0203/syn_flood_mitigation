@@ -45,7 +45,8 @@ def call_method( sc, n, m, r, e, s, d):
 
 def test_bloom(n, m, r, e, d):
     analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, m, r)
-    (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, m, r, e, analysis_file, threshold, False)
+    MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, m+n)
+    (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, m, r, e, analysis_file, MAC_file, threshold, True)
     print(specificity, precision, accuracy, test_1, test_3) 
 
 def test_cuckoo(n, m, r, s, d):
@@ -88,7 +89,7 @@ def scenario_2(n, e, s, d):
             read_pcap(n, attacker_num, rate, d)
         (specificity, precision, accuracy, test_2) = cuckoo2_method(n, attacker_num, rate, s, analysis_file, MAC_file)
         output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, MAC_file, threshold, True)
         output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
@@ -114,7 +115,7 @@ def scenario_5(n, e, s, d):
         output_file_cuckoo_2.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
         if(test_2 is False):
             print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, MAC_file, threshold, True)
         output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
@@ -141,12 +142,12 @@ def scenario_5_1(n, e, s, d):
         if(test_2 is False):
             print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
 
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, True)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, MAC_file, threshold, True)
         output_file_bloom.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
             
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, threshold, False)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(n, attacker_num, rate, e, analysis_file, MAC_file, threshold, False)
         output_file_bloom_none_T.write("%d %f %f %f\n"% (attacker_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, n, attacker_num, rate))
@@ -172,7 +173,7 @@ def scenario_6(m, e, s, d):
         output_file_cuckoo_2.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
         if(test_2 is False):
             print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, m, nomral_num, rate))
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(nomral_num, m, rate, e, analysis_file, threshold, True)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(nomral_num, m, rate, e, analysis_file, MAC_file, threshold, True)
         output_file_bloom.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, nomral_num, m, rate))
@@ -196,7 +197,7 @@ def scenario_7(m, e, s, d):
         output_file_cuckoo_2.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
         if(test_2 is False):
             print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, m, nomral_num, rate))
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(nomral_num, m, rate, e, analysis_file, threshold, True)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(nomral_num, m, rate, e, analysis_file, MAC_file, threshold, True)
         output_file_bloom.write("%d %f %f %f\n"% (nomral_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, nomral_num, m, rate))
@@ -224,12 +225,12 @@ def scenario_7_1(m, e, s, d):
         if(test_2 is False):
             print('test _2 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
 
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(normal_num, m, rate, e, analysis_file, threshold, True)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(normal_num, m, rate, e, analysis_file, MAC_file, threshold, True)
         output_file_bloom.write("%d %f %f %f\n"% (normal_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
             
-        (specificity, precision, accuracy, test_1, test_3) = bloom_method(normal_num, m, rate, e, analysis_file, threshold, False)
+        (specificity, precision, accuracy, test_1, test_3) = bloom_method(normal_num, m, rate, e, analysis_file, MAC_file, threshold, False)
         output_file_bloom_none_T.write("%d %f %f %f\n"% (normal_num, specificity, precision, accuracy))
         if(test_1 is False):
             print('test _1 is false in %s/n%d_m%d_r%s.txt file' %(d, normal_num, m, rate))
