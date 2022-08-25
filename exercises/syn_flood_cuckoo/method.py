@@ -82,7 +82,7 @@ def scenario_2(n, e, s, d):
     rate = "u200000"
     output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s2.txt"%(d, n, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s2.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
+    for attacker_num in  range(20, 71, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
         if not os.path.isfile(analysis_file):
@@ -106,7 +106,7 @@ def scenario_5(n, e, s, d):
     rate = "4"
     output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s5.txt"%(d, n, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s5.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
+    for attacker_num in  range(20, 71, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
         if not os.path.isfile(analysis_file):
@@ -131,7 +131,7 @@ def scenario_5_1(n, e, s, d):
     output_file_bloom=open("./plot_dataset/bloom/%s/n%d_r%s_s5_1.txt"%(d, n, rate), 'w')
     output_file_bloom_none_T=open("./plot_dataset/bloom/%s/n%d_r%s_s5_1_none_T.txt"%(d, n, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/n%d_r%s_s5_1.txt"%(d, n, rate), 'w')
-    for attacker_num in  range(20, 81, 10):
+    for attacker_num in  range(20, 71, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, n, attacker_num, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, attacker_num+n)
         if not os.path.isfile(analysis_file):
@@ -164,7 +164,7 @@ def scenario_6(m, e, s, d):
     rate = "u200000"
     output_file_bloom=open("./plot_dataset/bloom/%s/m%d_r%s_s6.txt"%(d, m, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/m%d_r%s_s6.txt"%(d, m, rate), 'w')
-    for nomral_num in  range(20, 81, 10):
+    for nomral_num in  range(20, 71, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, nomral_num, m, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, nomral_num+m)
         if not os.path.isfile(analysis_file):
@@ -188,7 +188,7 @@ def scenario_7(m, e, s, d):
     rate = "4"
     output_file_bloom=open("./plot_dataset/bloom/%s/m%d_r%s_s7.txt"%(d, m, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/m%d_r%s_s7.txt"%(d, m, rate), 'w')
-    for nomral_num in  range(20, 81, 10):
+    for nomral_num in  range(20, 71, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, nomral_num, m, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, nomral_num+m)
         if not os.path.isfile(analysis_file):
@@ -214,7 +214,7 @@ def scenario_7_1(m, e, s, d):
     output_file_bloom=open("./plot_dataset/bloom/%s/m%d_r%s_s7_1.txt"%(d, m, rate), 'w')
     output_file_bloom_none_T=open("./plot_dataset/bloom/%s/m%d_r%s_s7_1_none_T.txt"%(d, m, rate), 'w')
     output_file_cuckoo_2=open("./plot_dataset/cuckoo2/%s/m%d_r%s_s7_1.txt"%(d, m, rate), 'w')
-    for normal_num in  range(20, 81, 10):
+    for normal_num in  range(20, 71, 10):
         analysis_file = "./analysis/%s/n%d_m%d_r%s.txt"%(d, normal_num, m, rate)
         MAC_file = "./MAC_address/%s/MAC_address_%d"%(d, normal_num+m)
         if not os.path.isfile(analysis_file):

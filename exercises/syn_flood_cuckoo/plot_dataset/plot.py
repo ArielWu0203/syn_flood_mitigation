@@ -14,7 +14,7 @@ def plot(sc, n, m, r, d):
         plot_all_for_attacker(n, r, 'sc2')
     elif(sc==5):
         plot_secerio_for_attacker(n, r, d, 'sc5')
-        plot_secerio_5_1(n, r, d)
+        # plot_secerio_5_1(n, r, d)
         plot_all_for_attacker(n, r, 'sc5')
     elif(sc==6):
         plot_secerio_for_normal(m, r, d, 'sc6')
@@ -44,17 +44,21 @@ def plot_all_for_normal(m, r, sc):
     legend=[]
     if(sc=="sc6"):
         all_file_names= ["./bloom/%s/data_%d/m%d_r%s_s6.txt", "./cuckoo2/%s/data_%d/m%d_r%s_s6.txt"]
-        markers=["o", "+"]
+        markers=[".", "o"]
+        markerfacecolors=['b', 'none']
+        markersizes=[8,9]
         legend=["bloom", "our method"]
     if(sc=="sc7"):
-        all_file_names= ["./bloom/%s/data_%d/m%d_r%s_s7.txt", "./bloom/%s/data_%d/m%d_r%s_s7_1_none_T.txt", "./cuckoo2/%s/data_%d/m%d_r%s_s7.txt"]
-        markers=["o", "^", "+"]
-        legend=["bloom","bloom without decreasing", "our method"]
-    for file_name, marker in zip(all_file_names, markers):
-        x=[20, 30, 40, 50 ,60 , 70, 80]
-        specificity_y=[0.0]*7
-        precision_y=[0.0]*7
-        accuracy_y=[0.0]*7
+        all_file_names= ["./bloom/%s/data_%d/m%d_r%s_s7_1_none_T.txt", "./cuckoo2/%s/data_%d/m%d_r%s_s7.txt"]
+        markers=[".", "o"]
+        markersizes=[8,9]
+        markerfacecolors=['b', 'none']
+        legend=["bloom", "our method"]
+    for file_name, marker, markerfacecolor, markersize in zip(all_file_names, markers, markerfacecolors, markersizes):
+        x=[20, 30, 40, 50 ,60 , 70]
+        specificity_y=[0.0]*6
+        precision_y=[0.0]*6
+        accuracy_y=[0.0]*6
         for i in range(1, 11):
             file=open(file_name %(sc, i, m, r), 'r')
             line_num=0
@@ -64,12 +68,18 @@ def plot_all_for_normal(m, r, sc):
                 precision_y[line_num]+=precision
                 accuracy_y[line_num]+=accuracy
                 line_num+=1
-        ax_1.plot(x, [y/10 for y in specificity_y], marker=marker)
-        ax_2.plot(x, [y/10 for y in precision_y], marker=marker)
-        ax_3.plot(x, [y/10 for y in accuracy_y], marker=marker)
+        ax_1.plot(x, [y/10 for y in specificity_y], marker=marker,  markerfacecolor=markerfacecolor, markersize=markersize)
+        ax_2.plot(x, [y/10 for y in precision_y], marker=marker,  markerfacecolor=markerfacecolor, markersize=markersize)
+        ax_3.plot(x, [y/10 for y in accuracy_y], marker=marker,  markerfacecolor=markerfacecolor, markersize=markersize)
     ax_1.legend(legend)
+    ax_1.set_ylim(0.8,1.05)
+    ax_1.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_2.legend(legend)
+    ax_2.set_ylim(0.8,1.05)
+    ax_2.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_3.legend(legend)
+    ax_3.set_ylim(0.8,1.05)
+    ax_3.set_yticks(np.arange(0.8, 1.05, 0.05))
     fig_1.savefig("./pic/%s/specificity.png" % sc)
     fig_2.savefig("./pic/%s/precision.png" % sc)
     fig_3.savefig("./pic/%s/accuracy" % sc)
@@ -110,9 +120,9 @@ def plot_secerio_for_normal(m, r, d, sc):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='o')
-    ax_2.plot(x, precision_y, marker='o')
-    ax_3.plot(x, accuracy_y, marker='o')
+    ax_1.plot(x, specificity_y, marker='.',  markerfacecolor='b', markersize=8)
+    ax_2.plot(x, precision_y, marker='.',  markerfacecolor='b', markersize=8)
+    ax_3.plot(x, accuracy_y, marker='.',  markerfacecolor='b', markersize=8)
     x=[]
     specificity_y=[]
     precision_y=[]
@@ -123,13 +133,19 @@ def plot_secerio_for_normal(m, r, d, sc):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='^')
-    ax_2.plot(x, precision_y, marker='^')
-    ax_3.plot(x, accuracy_y, marker='^')
+    ax_1.plot(x, specificity_y, marker='o',  markerfacecolor='none', markersize=9)
+    ax_2.plot(x, precision_y, marker='o',  markerfacecolor='none', markersize=9)
+    ax_3.plot(x, accuracy_y, marker='o',  markerfacecolor='none', markersize=9)
     legend=["bloom","our method"]
     ax_1.legend(legend)
+    ax_1.set_ylim(0.8,1.05)
+    ax_1.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_2.legend(legend)
+    ax_2.set_ylim(0.8,1.05)
+    ax_2.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_3.legend(legend)
+    ax_3.set_ylim(0.8,1.05)
+    ax_3.set_yticks(np.arange(0.8, 1.05, 0.05))
     fig_1.savefig("./pic/%s/specificity.png" % d)
     fig_2.savefig("./pic/%s/precision.png" % d)
     fig_3.savefig("./pic/%s/accuracy.png" % d)
@@ -170,9 +186,9 @@ def plot_secerio_for_attacker(n, r, d, sc):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='o')
-    ax_2.plot(x, precision_y, marker='o')
-    ax_3.plot(x, accuracy_y, marker='o')
+    ax_1.plot(x, specificity_y, marker='.',  markerfacecolor='b', markersize=8)
+    ax_2.plot(x, precision_y, marker='.',  markerfacecolor='b', markersize=8)
+    ax_3.plot(x, accuracy_y, marker='.',  markerfacecolor='b', markersize=8)
     x=[]
     specificity_y=[]
     precision_y=[]
@@ -183,13 +199,19 @@ def plot_secerio_for_attacker(n, r, d, sc):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='^')
-    ax_2.plot(x, precision_y, marker='^')
-    ax_3.plot(x, accuracy_y, marker='^')
+    ax_1.plot(x, specificity_y, marker='o',  markerfacecolor='none', markersize=9)
+    ax_2.plot(x, precision_y, marker='o',  markerfacecolor='none', markersize=9)
+    ax_3.plot(x, accuracy_y, marker='o',  markerfacecolor='none', markersize=9)
     legend=["bloom","our method"]
     ax_1.legend(legend)
+    ax_1.set_ylim(0.8,1.05)
+    ax_1.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_2.legend(legend)
+    ax_2.set_ylim(0.8,1.05)
+    ax_2.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_3.legend(legend)
+    ax_3.set_ylim(0.8,1.05)
+    ax_3.set_yticks(np.arange(0.8, 1.05, 0.05))
     fig_1.savefig("./pic/%s/specificity.png" % d)
     fig_2.savefig("./pic/%s/precision.png" % d)
     fig_3.savefig("./pic/%s/accuracy.png" % d)
@@ -223,9 +245,9 @@ def plot_secerio_5_1(n, r, d):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='o')
-    ax_2.plot(x, precision_y, marker='o')
-    ax_3.plot(x, accuracy_y, marker='o')
+    ax_1.plot(x, specificity_y, marker='.',  markerfacecolor='none')
+    ax_2.plot(x, precision_y, marker='.',  markerfacecolor='none')
+    ax_3.plot(x, accuracy_y, marker='.',  markerfacecolor='none')
     x=[]
     specificity_y=[]
     precision_y=[]
@@ -236,9 +258,9 @@ def plot_secerio_5_1(n, r, d):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='+')
-    ax_2.plot(x, precision_y, marker='+')
-    ax_3.plot(x, accuracy_y, marker='+')
+    ax_1.plot(x, specificity_y, marker='^', markerfacecolor='none')
+    ax_2.plot(x, precision_y, marker='^', markerfacecolor='none')
+    ax_3.plot(x, accuracy_y, marker='^', markerfacecolor='none')
     x=[]
     specificity_y=[]
     precision_y=[]
@@ -249,13 +271,19 @@ def plot_secerio_5_1(n, r, d):
         specificity_y.append(specificity)
         precision_y.append(precision)
         accuracy_y.append(accuracy)
-    ax_1.plot(x, specificity_y, marker='^')
-    ax_2.plot(x, precision_y, marker='^')
-    ax_3.plot(x, accuracy_y, marker='^')
+    ax_1.plot(x, specificity_y, marker='^',  markerfacecolor='none')
+    ax_2.plot(x, precision_y, marker='^',  markerfacecolor='none')
+    ax_3.plot(x, accuracy_y, marker='^',  markerfacecolor='none')
     legend=["bloom","bloom without decreasing", "our method"]
     ax_1.legend(legend)
+    ax_1.set_ylim(0.8,1.05)
+    ax_1.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_2.legend(legend)
+    ax_2.set_ylim(0.8,1.05)
+    ax_2.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_3.legend(legend)
+    ax_3.set_ylim(0.8,1.05)
+    ax_3.set_yticks(np.arange(0.8, 1.05, 0.05))
     fig_1.savefig("./pic/%s/specificity_without_decreasing.png" % d)
     fig_2.savefig("./pic/%s/precision_without_decreasing.png" % d)
     fig_3.savefig("./pic/%s/accuracy_without_decreasing.png" % d)
@@ -281,17 +309,21 @@ def plot_all_for_attacker(n, r, sc):
     legend=[]
     if(sc=="sc2"):
         all_file_names= ["./bloom/%s/data_%d/n%d_r%s_s2.txt", "./cuckoo2/%s/data_%d/n%d_r%s_s2.txt"]
-        markers=["o", "+"]
+        markers=[".", "o"]
+        markerfacecolors=['b', 'none']
+        markersizes=[8, 9]
         legend=["bloom", "our method"]
     elif(sc=="sc5"):
-        all_file_names= ["./bloom/%s/data_%d/n%d_r%s_s5.txt", "./bloom/%s/data_%d/n%d_r%s_s5_1_none_T.txt", "./cuckoo2/%s/data_%d/n%d_r%s_s5.txt"]
-        markers=["o", "^", "+"]
-        legend=["bloom","bloom without decreasing", "our method"]
-    for file_name, marker in zip(all_file_names, markers):
-        x=[20, 30, 40, 50 ,60 , 70, 80]
-        specificity_y=[0.0]*7
-        precision_y=[0.0]*7
-        accuracy_y=[0.0]*7
+        all_file_names= ["./bloom/%s/data_%d/n%d_r%s_s5_1_none_T.txt", "./cuckoo2/%s/data_%d/n%d_r%s_s5.txt"]
+        markers=[".", "o"]
+        markerfacecolors=['b', 'none']
+        markersizes=[8, 9]
+        legend=["bloom", "our method"]
+    for file_name, marker, markerfacecolor, markersize in zip(all_file_names, markers, markerfacecolors, markersizes):
+        x=[20, 30, 40, 50 ,60 , 70]
+        specificity_y=[0.0]*6
+        precision_y=[0.0]*6
+        accuracy_y=[0.0]*6
         for i in range(1, 11):
             file=open(file_name %(sc, i, n, r), 'r')
             line_num=0
@@ -304,12 +336,18 @@ def plot_all_for_attacker(n, r, sc):
         specificity_y = [y/10 for y in specificity_y]
         precision_y =  [y/10 for y in precision_y]
         accuracy_y = [y/10 for y in accuracy_y]
-        ax_1.plot(x, specificity_y, marker=marker)
-        ax_2.plot(x, precision_y, marker=marker)
-        ax_3.plot(x, accuracy_y, marker=marker)
+        ax_1.plot(x, specificity_y, marker=marker, markerfacecolor=markerfacecolor, markersize=markersize)
+        ax_2.plot(x, precision_y, marker=marker, markerfacecolor=markerfacecolor, markersize=markersize)
+        ax_3.plot(x, accuracy_y, marker=marker, markerfacecolor=markerfacecolor, markersize=markersize)
     ax_1.legend(legend)
+    ax_1.set_ylim(0.8,1.05)
+    ax_1.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_2.legend(legend)
+    ax_2.set_ylim(0.8,1.05)
+    ax_2.set_yticks(np.arange(0.8, 1.05, 0.05))
     ax_3.legend(legend)
+    ax_3.set_ylim(0.8,1.05)
+    ax_3.set_yticks(np.arange(0.8, 1.05, 0.05))
     fig_1.savefig("./pic/%s/specificity.png" % sc)
     fig_2.savefig("./pic/%s/precision.png" % sc)
     fig_3.savefig("./pic/%s/accuracy" % sc)
