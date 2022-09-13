@@ -199,6 +199,18 @@ class P4InfoHelper(object):
             mc_entry.multicast_group_entry.replicas.extend([r])
         return mc_entry
 
+    def buildDigestEntry(self, digest_name=None):
+        digest_entry = p4runtime_pb2.DigestEntry()
+        # using name 
+        digest_entry.digest_id = self.get_digests_id(digest_name)
+        # using id directly
+        #digest_entry.digest_id = int(digest_id)
+        # FIXME: set config
+        digest_entry.config.max_timeout_ns = 0
+        digest_entry.config.max_list_size = 1
+        digest_entry.config.ack_timeout_ns = 0
+        return digest_entry
+        
     def buildCloneSessionEntry(self, clone_session_id, replicas, packet_length_bytes=0):
         clone_entry = p4runtime_pb2.PacketReplicationEngineEntry()
         clone_entry.clone_session_entry.session_id = clone_session_id

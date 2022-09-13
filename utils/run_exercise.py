@@ -201,39 +201,39 @@ class ExerciseRunner:
         """
 
         # init start time
-        self.start_time=0
+        # self.start_time=0
         
-        # Initialize mininet with the topology specified by the config
+        # # Initialize mininet with the topology specified by the config
         self.create_network()
         self.net.start()
         sleep(1)
 
-        # some programming that must happen after the net has started
+        # # some programming that must happen after the net has started
         self.program_hosts()
         self.program_switches()
 
-        # wait for that to finish. Not sure how to do this better
+        # # wait for that to finish. Not sure how to do this better
         sleep(5)
         
-        self.start_time=time.time()
+        # self.start_time=time.time()
 
-        # start testing
-        hosts_thread =list()
-        for host_name, host_info in list(self.hosts.items())[3+self.attacker_num:]:
-            host = threading.Thread(target=self.normal_testing, args=(host_name,))
-            host.start()
-            hosts_thread.append(host)
+        # # start testing
+        # hosts_thread =list()
+        # for host_name, host_info in list(self.hosts.items())[3+self.attacker_num:]:
+        #     host = threading.Thread(target=self.normal_testing, args=(host_name,))
+        #     host.start()
+        #     hosts_thread.append(host)
 
-        # start attacking
-        for host_name, host_info in list(self.hosts.items())[3: 3+self.attacker_num]:
-            host = threading.Thread(target=self.attack_testing, args=(host_name,))
-            host.start()
-            hosts_thread.append(host)
+        # # start attacking
+        # for host_name, host_info in list(self.hosts.items())[3: 3+self.attacker_num]:
+        #     host = threading.Thread(target=self.attack_testing, args=(host_name,))
+        #     host.start()
+        #     hosts_thread.append(host)
 
-        for h in hosts_thread:
-            h.join()
+        # for h in hosts_thread:
+        #     h.join()
 
-        # self.do_net_cli()
+        self.do_net_cli()
         # stop right after the CLI is exited
         self.net.stop()
 

@@ -1,7 +1,7 @@
 NORMAL=20
 ATTACKER=20
-RATE=4
-TEST_DIR=./testing/sc6/data_1
+RATE=u200000
+TEST_DIR=./testing/sc2/data_1
 DURATION=120
 
 BUILD_DIR = build

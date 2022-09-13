@@ -11,8 +11,6 @@
 !topology.json
 !*-runtime.json
 
-*.pcap
-
 # Extracted solutions
 solution*/
 !solution/
